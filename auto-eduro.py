@@ -27,19 +27,20 @@ class Macro:
             temp_driver.get('https://hcs.eduro.go.kr/')
             while True:
                 self.users = temp_driver.execute_script('''return localStorage.getItem('users');''')
+                self.cookies = temp_driver.execute_script('''return document.cookie;''')
                 self.password = temp_driver.execute_script('''return document.querySelector('input[type="password"]')?.value;''')
                 if self.users:
                     file = open('eduro_userdata', 'w')
-                    file.write('\n'.join([self.users, self.password]))
+                    file.write('\n'.join([self.users, self.cookies, self.password]))
                     file.close()
                     break
-                sleep(0.1)
-            temp_driver.close()
+            temp_driver.quit()
         else:
-            self.users, self.password = file.read().split('\n')
+            self.users, self.cookies, self.password = file.read().split('\n')
             file.close()
 
         self.driver.execute_script(f'''localStorage.setItem('users', '{self.users}');''')
+        self.driver.execute_script(f'''document.cookie = '{self.cookies}';''')
         self.driver.refresh()
 
     def self_check(self):
@@ -54,14 +55,17 @@ class Macro:
             answer.click()
         self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="submit"]'))).click()
 
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'img[alt="정상"]')))
+
     def update_userdata(self):
         self.users = self.driver.execute_script('''return localStorage.getItem('users');''')
+        self.cookies = self.driver.execute_script('''return document.cookie;''')
         file = open('eduro_userdata', 'w')
-        file.write('\n'.join([self.users, self.password]))
+        file.write('\n'.join([self.users, self.cookies, self.password]))
         file.close()
 
     def __del__(self):
-        self.driver.close()
+        self.driver.quit()
 
 macro = Macro()
 macro.load_userdata()

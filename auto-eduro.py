@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from chromedriver_autoinstaller import install as chromedriver
 from time import sleep
+from random import randint
 
 class Macro:
     def __init__(self):
@@ -66,6 +67,8 @@ class Macro:
 
     def __del__(self):
         self.driver.quit()
+
+sleep(randint(60, 300))
 
 macro = Macro()
 macro.load_userdata()

@@ -61,9 +61,10 @@ class Macro:
     def update_userdata(self):
         self.users = self.driver.execute_script('''return localStorage.getItem('users');''')
         self.cookies = self.driver.execute_script('''return document.cookie;''')
-        file = open('eduro_userdata', 'w')
-        file.write('\n'.join([self.users, self.cookies, self.password]))
-        file.close()
+        if self.users:
+            file = open('eduro_userdata', 'w')
+            file.write('\n'.join([self.users, self.cookies, self.password]))
+            file.close()
 
     def __del__(self):
         self.driver.quit()

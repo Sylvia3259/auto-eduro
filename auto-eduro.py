@@ -3,8 +3,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from chromedriver_autoinstaller import install as chromedriver
-from time import sleep
-from random import randint
+import datetime
+import traceback
+import time
+import random
 
 class Macro:
     def __init__(self):
@@ -45,18 +47,24 @@ class Macro:
         self.driver.refresh()
 
     def self_check(self):
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="password"]'))).send_keys(self.password)
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#btnConfirm'))).click()
+        try:
+            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="password"]'))).send_keys(self.password)
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#btnConfirm'))).click()
 
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn'))).click()
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn'))).click()
 
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[id$="a1"]')))
-        answers = self.driver.find_elements(By.CSS_SELECTOR, 'input[id$="a1"]')
-        for answer in answers:
-            answer.click()
-        self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="submit"]'))).click()
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[id$="a1"]')))
+            answers = self.driver.find_elements(By.CSS_SELECTOR, 'input[id$="a1"]')
+            for answer in answers:
+                answer.click()
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[type="submit"]'))).click()
 
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'img[alt="정상"]')))
+            self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'img[alt="정상"]')))
+        except:
+            file = open('error.log', 'a')
+            file.write(f'[{datetime.datetime.now():%Y/%m/%d %H:%M:%S}]\n')
+            file.write(f'{traceback.format_exc()}\n')
+            file.close()
 
     def update_userdata(self):
         self.users = self.driver.execute_script('''return localStorage.getItem('users');''')
@@ -69,7 +77,7 @@ class Macro:
     def __del__(self):
         self.driver.quit()
 
-sleep(randint(60, 300))
+time.sleep(random.randint(60, 300))
 
 macro = Macro()
 macro.load_userdata()

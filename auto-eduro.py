@@ -51,7 +51,7 @@ class Macro:
             self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'input[type="password"]'))).send_keys(self.password)
             self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '#btnConfirm'))).click()
 
-            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'button.btn'))).click()
+            self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, '.btn'))).click()
 
             self.wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, 'input[id$="a1"]')))
             answers = self.driver.find_elements(By.CSS_SELECTOR, 'input[id$="a1"]')

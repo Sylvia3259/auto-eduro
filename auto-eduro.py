@@ -77,7 +77,7 @@ class Macro:
     def __del__(self):
         self.driver.quit()
 
-time.sleep(random.randint(60, 300))
+time.sleep(random.randint(60, 600))
 
 macro = Macro()
 macro.load_userdata()
